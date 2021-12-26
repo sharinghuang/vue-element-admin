@@ -1,33 +1,101 @@
 <template>
   <div class="app-container documentation-container">
-    <a class="document-btn" target="_blank" href="https://store.akveo.com/products/vue-java-admin-dashboard-spring?utm_campaign=akveo_store-Vue-Vue_demo%2Fgithub&utm_source=vue_admin&utm_medium=referral&utm_content=demo_English_button">Java backend integration</a>
-    <a class="document-btn" target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/">Documentation</a>
-    <a class="document-btn" target="_blank" href="https://github.com/PanJiaChen/vue-element-admin/">Github Repository</a>
-    <a class="document-btn" target="_blank" href="https://panjiachen.gitee.io/vue-element-admin-site/zh/">国内文档</a>
-    <dropdown-menu class="document-btn" :items="articleList" title="系列文章" />
-    <a class="document-btn" target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/zh/job/">内推招聘</a>
+    <el-color-picker
+      v-model="color"
+      size="small"
+      show-alpha
+      :predefine="predefineColors"
+      @change="colorChange"
+    />
+    <el-row :gutter="32">
+      <el-col :xs="24" :sm="24" :lg="6">
+        <div class="chart-wrapper">
+          <div class="color-block" :style="{ background: color }" />
+
+          <div class="color-block-tips">
+            <li style="padding: 6px">RGB: {{ color }}</li>
+            <li style="padding: 6px">HEX:</li>
+            <li style="padding: 6px">HSV:</li>
+            <li style="padding: 6px">Lab:</li>
+            <li style="padding: 6px">CMYK:</li>
+          </div>
+        </div>
+      </el-col>
+      <el-col :xs="24" :sm="24" :lg="6">
+        <div class="chart-wrapper">
+          <div class="color-block" :style="{ background: color }" />
+
+          <div class="color-block-tips">
+            <li style="padding: 6px">RGB: {{ color }}</li>
+            <li style="padding: 6px">HEX:</li>
+            <li style="padding: 6px">HSV:</li>
+            <li style="padding: 6px">Lab:</li>
+            <li style="padding: 6px">CMYK:</li>
+          </div>
+        </div>
+      </el-col>
+      <el-col :xs="24" :sm="24" :lg="10">
+        <div class="chart-wrapper">
+          <div class="progress-bar-block">
+            <p>深度调整</p>
+            <el-slider
+              v-model="progressValueA"
+              style="padding: 8px"
+              show-input
+            />
+
+            <p>色向调整</p>
+            <el-slider
+              v-model="progressValueB"
+              style="padding: 8px"
+              show-input
+            />
+
+            <p>饱和度调整</p>
+            <el-slider
+              v-model="progressValueC"
+              style="padding: 8px"
+              show-input
+            />
+          </div>
+        </div>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <script>
-import DropdownMenu from '@/components/Share/DropdownMenu'
 
 export default {
   name: 'Documentation',
-  components: { DropdownMenu },
+  components: {},
   data() {
     return {
-      articleList: [
-        { title: '基础篇', href: 'https://juejin.im/post/59097cd7a22b9d0065fb61d2' },
-        { title: '登录权限篇', href: 'https://juejin.im/post/591aa14f570c35006961acac' },
-        { title: '实战篇', href: 'https://juejin.im/post/593121aa0ce4630057f70d35' },
-        { title: 'vue-admin-template 篇', href: 'https://juejin.im/post/595b4d776fb9a06bbe7dba56' },
-        { title: 'v4.0 篇', href: 'https://juejin.im/post/5c92ff94f265da6128275a85' },
-        { title: '自行封装 component', href: 'https://segmentfault.com/a/1190000009090836' },
-        { title: '优雅的使用 icon', href: 'https://juejin.im/post/59bb864b5188257e7a427c09' },
-        { title: 'webpack4（上）', href: 'https://juejin.im/post/59bb864b5188257e7a427c09' },
-        { title: 'webpack4（下）', href: 'https://juejin.im/post/5b5d6d6f6fb9a04fea58aabc' }
+      progressValueA: 10,
+      progressValueB: 20,
+      progressValueC: 30,
+      color: 'rgba(255, 69, 0, 1)',
+      predefineColors: [
+        '#ff4500',
+        '#ff8c00',
+        '#ffd700',
+        '#90ee90',
+        '#00ced1',
+        '#1e90ff',
+        '#c71585',
+        'rgba(255, 69, 0, 0.68)',
+        'rgb(255, 120, 0)',
+        'hsv(51, 100, 98)',
+        'hsva(120, 40, 94, 0.5)',
+        'hsl(181, 100%, 37%)',
+        'hsla(209, 100%, 56%, 0.73)'
       ]
+    }
+  },
+  methods: {
+    colorChange(a) {
+      console.log(this)
+      console.log(a)
     }
   }
 }
@@ -35,23 +103,28 @@ export default {
 
 <style lang="scss" scoped>
 .documentation-container {
-  margin: 50px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
+  padding: 32px;
+  background-color: rgb(240, 242, 245);
+  position: relative;
+}
+.color-block-tips {
+  width: 80%;
+  margin: auto;
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+.progress-bar-block {
+  margin-top: 20%;
+}
+.color-block {
+  height: 320px;
+  width: 80%;
+  margin: auto;
+}
 
-  .document-btn {
-    flex-shrink: 0;
-    display: block;
-    cursor: pointer;
-    background: black;
-    color: white;
-    height: 60px;
-    padding: 0 16px;
-    margin: 16px;
-    line-height: 60px;
-    font-size: 20px;
-    text-align: center;
-  }
+.chart-wrapper {
+  background: #fff;
+  min-height: 480px;
+  padding: 16px 16px 0;
 }
 </style>
