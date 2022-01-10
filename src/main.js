@@ -43,6 +43,14 @@ Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
 })
 
+// registre color picker conponent http://vue-color-picker.rxshc.com/
+import vcolorpicker from 'vcolorpicker'
+Vue.use(vcolorpicker)
+
+// registre color native picker conponent https://dcustodio.github.io/vue-native-color-picker/
+import InputColorPicker from 'vue-native-color-picker'
+Vue.use(InputColorPicker)
+
 Vue.config.productionTip = false
 
 new Vue({
