@@ -27,7 +27,6 @@
         <div
           :style="{ background: adjustmentColor.hex }"
           class="chart-wrapper"
-          @click="handleShowColor"
         />
         <h3>HEX: {{ adjustmentColor.hex }}</h3>
         <h3>RGB: {{ adjustmentColorRgba }}</h3>
@@ -35,19 +34,20 @@
         <h3>HSL: {{ adjustmentColorHsl }}</h3>
       </el-col>
 
-      <el-col :xs="24" :sm="24" :lg="10">
+      <el-col :xs="24" :sm="24" :lg="6">
         <div class="chart-wrapper">
-          <div v-show="colorShow">
-            <chrome-picker
-              ref="chromePickerAdjustment"
-              v-model="adjustmentColor"
-              class="chrome-picker-adjustment"
-              @input="chromePickerAdjustmentInput"
-            />
-          </div>
+          <chrome-picker
+            ref="chromePickerAdjustment"
+            v-model="adjustmentColor"
+            class="chrome-picker-adjustment"
+            @input="chromePickerAdjustmentInput"
+          />
         </div>
-        <h3>
-          Hue:
+      </el-col>
+
+      <el-col :xs="24" :sm="24" :lg="4">
+        <div class="chart-wrapper-adjustment">
+          <h3>Hue</h3>
           <el-input-number
             v-model="adjustmentColor.hsl.h"
             :precision="2"
@@ -55,10 +55,8 @@
             :max="360"
             @change="handleHueChange"
           />
-        </h3>
 
-        <h3>
-          Saturation:
+          <h3>Saturation</h3>
           <el-input-number
             v-model="adjustmentColor.hsl.s"
             :precision="2"
@@ -66,10 +64,7 @@
             :max="1"
             @change="handleSaturationChange"
           />
-        </h3>
-
-        <h3>
-          Lightness:
+          <h3>Lightness</h3>
           <el-input-number
             v-model="adjustmentColor.hsl.l"
             :precision="2"
@@ -78,7 +73,7 @@
             :max="1"
             @change="handleLightnessChange"
           />
-        </h3>
+        </div>
       </el-col>
     </el-row>
   </div>
@@ -111,8 +106,7 @@ export default {
         rgba: { r: 25, g: 77, b: 51, a: 1 },
         a: 1
       },
-      countHslColor: { h: 150, s: 0.5, l: 0.2 },
-      colorShow: false
+      countHslColor: { h: 150, s: 0.5, l: 0.2 }
     }
   },
   computed: {
@@ -143,21 +137,23 @@ export default {
       this.originColor.hsv = chromePickerOriginData.hsv
       this.originColor.hsl = chromePickerOriginData.hsl
       this.originColor.rgba = chromePickerOriginData.rgba
+
+      var chromePickerAdjustmentData = this.$refs.chromePickerAdjustment.val
       this.adjustmentColor.hex = value
+      this.adjustmentColor.hex8 = chromePickerOriginData.hex8
       this.adjustmentColor.hsv = chromePickerOriginData.hsv
       this.adjustmentColor.hsl = chromePickerOriginData.hsl
       this.adjustmentColor.rgba = chromePickerOriginData.rgba
+
+      chromePickerAdjustmentData.hex = value
+      chromePickerAdjustmentData.hex8 = chromePickerOriginData.hex8
+      chromePickerAdjustmentData.rgba = chromePickerOriginData.rgba
+      chromePickerAdjustmentData.hsl = chromePickerOriginData.hsl
+      chromePickerAdjustmentData.hsv = chromePickerOriginData.hsv
     },
     chromePickerAdjustmentInput() {
       const chromePickerAdjustmentData = this.$refs.chromePickerAdjustment.val
       console.log('chromePickerAdjustmentInput is ', chromePickerAdjustmentData)
-    },
-    handleShowColor() {
-      if (this.colorShow) {
-        this.colorShow = false
-      } else {
-        this.colorShow = true
-      }
     },
     resetAdjustmentColor() {
       this.adjustmentColor = this.originColor
@@ -232,7 +228,13 @@ export default {
 }
 
 .chrome-picker-adjustment {
-  width: 80%;
+  min-height: 380px;
+  min-width: 80%;
+  width: auto;
+}
+
+.el-input-number {
+  width: 100%;
 }
 
 .progress-bar-block {
@@ -243,5 +245,11 @@ export default {
   background: #fff;
   min-height: 420px;
   padding: 16px 16px 0;
+}
+
+.chart-wrapper-adjustment {
+  background: #fff;
+  min-height: 420px;
+  padding: 56px 16px 16px 16px;
 }
 </style>
