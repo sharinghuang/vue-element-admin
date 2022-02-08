@@ -2,6 +2,7 @@
   <div class="app-container documentation-container">
     <h3>Please select color:</h3>
     <v-input-colorpicker
+      ref="inputColorPicker"
       v-model="originInputColor"
       class="v-input-colorpicker"
       @change="handleColorPickerChange"
@@ -80,7 +81,6 @@
 </template>
 
 <script>
-
 import { Chrome } from 'vue-color'
 // https://www.npmjs.com/package/tinycolor2
 import tinycolor from 'tinycolor2'
@@ -94,7 +94,7 @@ export default {
         hex: '#194d33',
         hex8: '#194D33A8',
         hsl: { h: 150, s: 0.5, l: 0.2, a: 1 },
-        hsv: { h: 150, s: 0.66, v: 0.30, a: 1 },
+        hsv: { h: 150, s: 0.66, v: 0.3, a: 1 },
         rgba: { r: 25, g: 77, b: 51, a: 1 },
         a: 1
       },
@@ -102,7 +102,7 @@ export default {
         hex: '#194d33',
         hex8: '#194D33A8',
         hsl: { h: 150, s: 0.5, l: 0.2, a: 1 },
-        hsv: { h: 150, s: 0.66, v: 0.30, a: 1 },
+        hsv: { h: 150, s: 0.66, v: 0.3, a: 1 },
         rgba: { r: 25, g: 77, b: 51, a: 1 },
         a: 1
       },
@@ -111,22 +111,72 @@ export default {
   },
   computed: {
     originColorRgba() {
-      return this.originColor.rgba.r + '   ' + this.originColor.rgba.g + '   ' + this.originColor.rgba.b
+      return (
+        this.originColor.rgba.r +
+        '   ' +
+        this.originColor.rgba.g +
+        '   ' +
+        this.originColor.rgba.b
+      )
     },
     originColorHsl() {
-      return this.originColor.hsl.h.toFixed(2) + '   ' + this.originColor.hsl.s.toFixed(2) + '   ' + this.originColor.hsl.l.toFixed(2)
+      return (
+        this.originColor.hsl.h.toFixed(2) +
+        '   ' +
+        this.originColor.hsl.s.toFixed(2) +
+        '   ' +
+        this.originColor.hsl.l.toFixed(2)
+      )
     },
     originColorHsv() {
-      return this.originColor.hsv.h.toFixed(2) + '   ' + this.originColor.hsv.s.toFixed(2) + '   ' + this.originColor.hsv.v.toFixed(2)
+      return (
+        this.originColor.hsv.h.toFixed(2) +
+        '   ' +
+        this.originColor.hsv.s.toFixed(2) +
+        '   ' +
+        this.originColor.hsv.v.toFixed(2)
+      )
     },
     adjustmentColorRgba() {
-      return this.adjustmentColor.rgba.r + '   ' + this.adjustmentColor.rgba.g + '   ' + this.adjustmentColor.rgba.b
+      return (
+        this.adjustmentColor.rgba.r +
+        '   ' +
+        this.adjustmentColor.rgba.g +
+        '   ' +
+        this.adjustmentColor.rgba.b
+      )
     },
     adjustmentColorHsl() {
-      return this.adjustmentColor.hsl.h.toFixed(2) + '   ' + this.adjustmentColor.hsl.s.toFixed(2) + '   ' + this.adjustmentColor.hsl.l.toFixed(2)
+      return (
+        this.adjustmentColor.hsl.h.toFixed(2) +
+        '   ' +
+        this.adjustmentColor.hsl.s.toFixed(2) +
+        '   ' +
+        this.adjustmentColor.hsl.l.toFixed(2)
+      )
     },
     adjustmentColorHsv() {
-      return this.adjustmentColor.hsv.h.toFixed(2) + '   ' + this.adjustmentColor.hsv.s.toFixed(2) + '   ' + this.adjustmentColor.hsv.v.toFixed(2)
+      return (
+        this.adjustmentColor.hsv.h.toFixed(2) +
+        '   ' +
+        this.adjustmentColor.hsv.s.toFixed(2) +
+        '   ' +
+        this.adjustmentColor.hsv.v.toFixed(2)
+      )
+    }
+  },
+  mounted() {
+    const queryColor = this.$route.query.adjustPushColor
+    console.log('created queryColor', queryColor)
+    if (queryColor != null) {
+      this.originInputColor = queryColor
+      var color = tinycolor(this.originInputColor)
+      this.originColor.hex = color.toHexString()
+      this.originColor.hex8 = color.toHex8String()
+      this.originColor.hsv = color.toHsv()
+      this.originColor.hsl = color.toHsl()
+      this.originColor.rgba = color.toRgb()
+      this.adjustmentColor = this.originColor
     }
   },
   methods: {
@@ -150,6 +200,7 @@ export default {
       chromePickerAdjustmentData.rgba = chromePickerOriginData.rgba
       chromePickerAdjustmentData.hsl = chromePickerOriginData.hsl
       chromePickerAdjustmentData.hsv = chromePickerOriginData.hsv
+      console.log('handleColorPickerChange is ', chromePickerOriginData)
     },
     chromePickerAdjustmentInput() {
       const chromePickerAdjustmentData = this.$refs.chromePickerAdjustment.val
@@ -213,7 +264,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style lang="scss" scoped>

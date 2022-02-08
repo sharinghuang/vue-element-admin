@@ -28,13 +28,41 @@
     <el-main>
       <h3>当前色卡: {{ selectColorBlockName }}</h3>
       <div class="color-block-root">
-        <div
+        <el-popover
           v-for="(item, index) in colorBlocks"
           :key="index"
+          ref="popover"
           class="color-block"
-          :style="{ background: item.color }"
-          @click="colorBlockClick(item)"
-        />
+          placement="top"
+          trigger="click"
+        >
+          <p>选中的颜色是 {{ item.color }}</p>
+          <div style="text-align: right; margin: 0">
+            <el-button
+              v-show="false"
+              size="mini"
+              type="text"
+              @click="addFavourite(item, index)"
+            >收藏</el-button>
+            <el-button
+              v-show="false"
+              size="mini"
+              type="text"
+              @click="addOrderList(item, index)"
+            >加入清单</el-button>
+            <el-button
+              type="mini"
+              size="text"
+              @click="adjustmentColor(item, index)"
+            >调整</el-button>
+          </div>
+          <el-button
+            slot="reference"
+            class="button-color-block"
+            :style="{ background: item.color }"
+            @click="handleButtonColorblockClick(item)"
+          />
+        </el-popover>
       </div>
     </el-main>
   </el-container>
@@ -42,95 +70,103 @@
 
 <script>
 var colorCardData1 = [
-  { color: '#000' },
-  { color: '#001' },
-  { color: '#002' },
-  { color: '#003' },
-  { color: '#004' },
-  { color: '#005' },
-  { color: '#006' },
-  { color: '#007' },
-  { color: '#008' },
-  { color: '#008' },
-  { color: '#010' },
-  { color: '#011' },
-  { color: '#012' },
-  { color: '#013' },
-  { color: '#014' },
-  { color: '#015' },
-  { color: '#016' },
-  { color: '#017' },
-  { color: '#018' },
-  { color: '#019' },
-  { color: '#020' },
-  { color: '#021' },
-  { color: '#022' },
-  { color: '#023' },
-  { color: '#024' },
-  { color: '#025' }
+  { color: '#517061' },
+  { color: '#001000' },
+  { color: '#002000' },
+  { color: '#003000' },
+  { color: '#004000' },
+  { color: '#005000' },
+  { color: '#006000' },
+  { color: '#007000' },
+  { color: '#008000' },
+  { color: '#008000' },
+  { color: '#010000' },
+  { color: '#011000' },
+  { color: '#012000' },
+  { color: '#013000' },
+  { color: '#014000' },
+  { color: '#015000' },
+  { color: '#016000' },
+  { color: '#017000' },
+  { color: '#018000' },
+  { color: '#019000' },
+  { color: '#020000' },
+  { color: '#021000' },
+  { color: '#022000' },
+  { color: '#023000' },
+  { color: '#024000' },
+  { color: '#025000' }
 ]
 
 var colorCardData2 = [
-  { color: '#400' },
-  { color: '#401' },
-  { color: '#402' },
-  { color: '#403' },
-  { color: '#404' },
-  { color: '#405' },
-  { color: '#406' },
-  { color: '#407' },
-  { color: '#408' },
-  { color: '#408' },
-  { color: '#410' },
-  { color: '#411' },
-  { color: '#412' },
-  { color: '#413' },
-  { color: '#414' },
-  { color: '#415' },
-  { color: '#416' },
-  { color: '#417' }
+  { color: '#517000' },
+  { color: '#401000' },
+  { color: '#402000' },
+  { color: '#403000' },
+  { color: '#404000' },
+  { color: '#405000' },
+  { color: '#406000' },
+  { color: '#407000' },
+  { color: '#408000' },
+  { color: '#408000' },
+  { color: '#410000' },
+  { color: '#411000' },
+  { color: '#412000' },
+  { color: '#413000' },
+  { color: '#414000' },
+  { color: '#415000' },
+  { color: '#416000' },
+  { color: '#417000' }
 ]
 
 var colorCustomerCardData1 = [
-  { color: '#600' },
-  { color: '#601' },
-  { color: '#602' },
-  { color: '#603' },
-  { color: '#604' },
-  { color: '#605' },
-  { color: '#606' },
-  { color: '#607' },
-  { color: '#608' },
-  { color: '#608' },
-  { color: '#610' },
-  { color: '#611' },
-  { color: '#612' },
-  { color: '#613' },
-  { color: '#614' },
-  { color: '#615' },
-  { color: '#616' },
-  { color: '#617' }
+  { color: '#600000' },
+  { color: '#601000' },
+  { color: '#602000' },
+  { color: '#603000' },
+  { color: '#604000' },
+  { color: '#605000' },
+  { color: '#606000' },
+  { color: '#607000' },
+  { color: '#608000' },
+  { color: '#608000' },
+  { color: '#610000' },
+  { color: '#611000' },
+  { color: '#612000' },
+  { color: '#613000' },
+  { color: '#614000' },
+  { color: '#615000' },
+  { color: '#616000' },
+  { color: '#617000' }
 ]
 
 var colorCustomerCardData2 = [
-  { color: '#300' },
-  { color: '#301' },
-  { color: '#302' },
-  { color: '#303' },
-  { color: '#304' },
-  { color: '#305' },
-  { color: '#306' },
-  { color: '#307' },
-  { color: '#308' },
-  { color: '#308' },
-  { color: '#310' },
-  { color: '#311' },
-  { color: '#312' },
-  { color: '#313' },
-  { color: '#314' },
-  { color: '#315' },
-  { color: '#316' },
-  { color: '#317' }
+  { color: '#300000' },
+  { color: '#301000' },
+  { color: '#302000' },
+  { color: '#303000' },
+  { color: '#304000' },
+  { color: '#305000' },
+  { color: '#306000' },
+  { color: '#307000' },
+  { color: '#308000' },
+  { color: '#308000' },
+  { color: '#310000' },
+  { color: '#311000' },
+  { color: '#312000' },
+  { color: '#313000' },
+  { color: '#314000' },
+  { color: '#315000' },
+  { color: '#316000' },
+  { color: '#317000' },
+  { color: '#310000' },
+  { color: '#311000' },
+  { color: '#312000' },
+  { color: '#313000' },
+  { color: '#314000' },
+  { color: '#315000' },
+  { color: '#316000' },
+  { color: '#317000' }
 ]
 
 export default {
@@ -169,25 +205,39 @@ export default {
   methods: {
     handleCustomerColorCardClick(val) {
       console.log('handleCustomerColorCardClick val is ', val)
-      if (val.id === 1) {
-        this.colorBlocks = colorCustomerCardData1
+      if (val.id === '1') {
+        this.$data.colorBlocks = colorCustomerCardData1
       } else {
-        this.colorBlocks = colorCustomerCardData2
+        this.$data.colorBlocks = colorCustomerCardData2
       }
       this.selectColorBlockName = val.name
     },
     handleColorCardClick(val) {
       console.log('handleColorCardClick val is  ', val)
-      if (val.id === 1) {
+      if (val.id === '1') {
         this.colorBlocks = colorCardData1
       } else {
         this.colorBlocks = colorCardData2
       }
       this.selectColorBlockName = val.name
     },
-    colorBlockClick(val) {
-      console.log('colorBlockClick val is  ', val)
-    }
+    addFavourite(val, index) {
+      this.$refs.popover[index].showPopper = false
+    },
+    addOrderList(val, index) {
+      console.log('addOrderList val is  ', val)
+      this.$refs.popover[index].showPopper = false
+    },
+    adjustmentColor(val, index) {
+      console.log('adjustmentColor val is  ', val)
+      this.$refs.popover[index].showPopper = false
+      // 跳转到adjustment 界面
+      this.$router.push({
+        path: '/documentation/index',
+        query: { adjustPushColor: val.color }
+      })
+    },
+    handleButtonColorblockClick(val) {}
   }
 }
 </script>
@@ -202,6 +252,10 @@ export default {
   width: 50px;
   height: 50px;
   margin: 16px;
+}
+.button-color-block {
+  width: 50px;
+  height: 50px;
 }
 .color-block-root {
   display: flex;
