@@ -69,6 +69,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 var colorCardData1 = [
   { color: '#517061' },
   { color: '#001000' },
@@ -202,7 +204,24 @@ export default {
   },
   computed: {},
 
+  created() {
+    this.initColorData()
+  },
+
   methods: {
+    initColorData() {
+      console.log('fetchColorCardList is start ')
+      // 请求的URL地址
+      var url = 'http://mo.movingtech.online:7890'
+      // 要提交到服务器的数据
+      var dataObj = { GetAllColors: '0' }
+      // 调用axios.post()发起POST请求
+      axios.defaults.withCredentials = true
+      axios.post(url, dataObj).then(function(res) {
+        console.log(res.data)
+      })
+    },
+
     handleCustomerColorCardClick(val) {
       console.log('handleCustomerColorCardClick val is ', val)
       if (val.id === '1') {
